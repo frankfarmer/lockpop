@@ -2,7 +2,7 @@
 // It handles user interactions, game mechanics, and the overall flow of the game.
 
 let isGameActive = false;
-let score = 0;
+let score = 50; // Start at 50
 
 const canvas = document.getElementById('lock-canvas');
 const ctx = canvas.getContext('2d');
@@ -10,7 +10,7 @@ const centerX = canvas.width / 2;
 const centerY = canvas.height / 2;
 
 // Tune this value so the marker follows the center of the dark blue ring
-const markerRadius = 80; // Try values between 100 and 120 for best fit
+const markerRadius = 85; // Try values between 100 and 120 for best fit
 
 let markerAngle = 0;
 let markerSpeed = 0.05; // Radians per frame
@@ -49,6 +49,39 @@ function drawLock() {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(score, centerX, centerY);
+
+    // Draw GAME OVER text if not active and score > 0
+    if (!isGameActive && score > 0 && score !== 50) {
+        drawCircularText("GAME OVER", centerX, centerY, 100, -Math.PI / 2);
+    }
+
+    // Draw VICTORY text if score reaches 0
+    if (score === 0) {
+        drawCircularText("VICTORY!", centerX, centerY, 100, -Math.PI / 2);
+    }
+}
+
+// Helper to draw circular text
+function drawCircularText(text, x, y, radius, startAngle) {
+    ctx.save();
+    ctx.font = "bold 32px Arial";
+    ctx.fillStyle = "#fff";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    let angle = startAngle;
+    const angleStep = (2 * Math.PI) / text.length;
+    for (let i = 0; i < text.length; i++) {
+        ctx.save();
+        ctx.translate(
+            x + radius * Math.cos(angle),
+            y + radius * Math.sin(angle)
+        );
+        ctx.rotate(angle + Math.PI / 2);
+        ctx.fillText(text[i], 0, 0);
+        ctx.restore();
+        angle += angleStep;
+    }
+    ctx.restore();
 }
 
 // Animate the marker
@@ -63,11 +96,9 @@ function animateMarker() {
 // Update target position when starting game
 function startGame() {
     isGameActive = true;
-    score = 0;
-    // Pick a random target angle
+    score = 50;
     targetAngle = Math.random() * 2 * Math.PI;
     markerAngle = 0;
-    updateGameUI();
     drawLock();
     animateMarker();
 }
@@ -77,9 +108,13 @@ function checkLock() {
     if (!isGameActive) return;
     const diff = Math.abs(markerAngle - targetAngle);
     if (diff < 0.2 || Math.abs(diff - 2 * Math.PI) < 0.2) { // Allow some margin
-        score++;
+        score--;
+        if (score === 0) {
+            isGameActive = false;
+            drawLock();
+            return;
+        }
         targetAngle = Math.random() * 2 * Math.PI;
-        updateGameUI();
     } else {
         resetGame();
     }
@@ -87,13 +122,9 @@ function checkLock() {
 
 function resetGame() {
     isGameActive = false;
-    alert(`Game Over! Your score: ${score}`);
+    drawLock();
 }
 
-function updateGameUI() {
-    document.getElementById('score').textContent = `Score: ${score}`;
-    // You can add more UI updates here if needed
-}
 
 // Wire up the Start Game button
 document.getElementById('start-button').addEventListener('click', startGame);
