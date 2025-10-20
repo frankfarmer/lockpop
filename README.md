@@ -6,15 +6,15 @@
 ## Project Structure
 ```
 pop-the-lock-clone
-├── src
-│   ├── index.html        # Main HTML document for the game
-│   ├── styles
-│   │   └── main.css      # Styles for the game interface
-│   ├── scripts
-│   │   └── game.js       # Main game logic
-│   └── assets
-│       └── sounds
-│           └── index.js  # Sound effects management
+
+├── index.html        # Main HTML document for the game
+├── styles
+│   └── main.css      # Styles for the game interface
+├── scripts
+│   └── game.js       # Main game logic
+└── assets
+|   └── sounds
+|       └── index.js  # Sound effects management
 ├── package.json          # npm configuration file
 └── README.md             # Project documentation
 ```
