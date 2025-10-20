@@ -121,7 +121,9 @@ function checkLock() {
             return;
         }
         // Place the targetAngle ahead of the marker in the direction of travel
-        targetAngle = (markerAngle + (markerDirection * Math.random() * 0.8 * Math.PI)) % (2 * Math.PI);
+        // it should be between 0.2 and 0.8 radians
+        distance = (markerDirection * (0.2 + Math.random() * 0.6) * Math.PI);
+        targetAngle = (markerAngle + distance) % (2 * Math.PI);
 
         // Ensure targetAngle is positive (modulo can result in negative values)
         if (targetAngle < 0) {
