@@ -87,9 +87,12 @@ function animateMarker() {
     if (gameState !== "active") return;
 
     // Dynamically adjust marker speed based on score
-    const maxSpeed = 2 * Math.PI / 3; // 3 seconds per rotation
-    const minSpeed = 2 * Math.PI / 10; // 10 seconds per rotation
-    markerSpeed = minSpeed + ((maxSpeed - minSpeed) * (50 - score) / 50);
+    const maxSpeed = 2 * Math.PI / 3; // 3 seconds per rotation (radians per second)
+    const minSpeed = 2 * Math.PI / 10; // 10 seconds per rotation (radians per second)
+    const fps = 60; // Frames per second
+
+    // Calculate marker speed per frame
+    markerSpeed = (minSpeed + ((maxSpeed - minSpeed) * (50 - score) / 50)) / fps;
 
     markerAngle += markerSpeed;
     if (markerAngle > 2 * Math.PI) markerAngle -= 2 * Math.PI;
