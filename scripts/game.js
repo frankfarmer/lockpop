@@ -91,9 +91,10 @@ document.getElementById('start-button').addEventListener('click', startGame);
 // Listen for spacebar keydown to "pop" the lock
 document.addEventListener('keydown', function(event) {
     if (isGameActive && event.code === 'Space') {
-        checkLock(currentLockPosition); // You may want to use timing logic here later
+        checkLock();
     }
 });
+
 
 // Exporting functions for use in other modules
 export { startGame, checkLock, resetGame };
