@@ -8,33 +8,36 @@ const canvas = document.getElementById('lock-canvas');
 const ctx = canvas.getContext('2d');
 const centerX = canvas.width / 2;
 const centerY = canvas.height / 2;
-const radius = 120;
+
+// Tune this value so the marker follows the blue segment path
+const markerRadius = 155; // Try values between 145 and 165 for best fit
+
 let markerAngle = 0;
 let markerSpeed = 0.05; // Radians per frame
 let targetAngle = 0;
 
-// Draw the lock, target, and marker
+const backgroundImg = new Image();
+backgroundImg.src = 'assets/background.png';
+
 function drawLock() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw lock circle
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 8;
-    ctx.stroke();
+    // Draw background image if loaded
+    if (backgroundImg.complete) {
+        ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+    }
 
     // Draw target
-    const targetX = centerX + radius * Math.cos(targetAngle);
-    const targetY = centerY + radius * Math.sin(targetAngle);
+    const targetX = centerX + markerRadius * Math.cos(targetAngle);
+    const targetY = centerY + markerRadius * Math.sin(targetAngle);
     ctx.beginPath();
     ctx.arc(targetX, targetY, 16, 0, 2 * Math.PI);
     ctx.fillStyle = '#e74c3c';
     ctx.fill();
 
     // Draw moving marker
-    const markerX = centerX + radius * Math.cos(markerAngle);
-    const markerY = centerY + radius * Math.sin(markerAngle);
+    const markerX = centerX + markerRadius * Math.cos(markerAngle);
+    const markerY = centerY + markerRadius * Math.sin(markerAngle);
     ctx.beginPath();
     ctx.arc(markerX, markerY, 12, 0, 2 * Math.PI);
     ctx.fillStyle = '#3498db';

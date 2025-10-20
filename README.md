@@ -1,7 +1,7 @@
 # Pop the Lock Clone
 
 ## Overview
-"Pop the Lock Clone" is a web-based arcade game inspired by the popular "Pop the Lock" game. The objective of the game is to tap the button at the right moment to unlock the lock and score points.
+a web-based arcade game. The objective of the game is to press the spacebar at the right moment to unlock the lock and score points.
 
 ## Project Structure
 ```
@@ -39,15 +39,10 @@ pop-the-lock-clone
    ```
 
 ### Running the Game
-1. Open `src/index.html` in your web browser to play the game.
+1. Open `index.html` in your web browser to play the game.
+2. Or visit the [GitHub Pages site](https://frankfarmer.github.io/lockpop/) to play online.
 
 ## How to Play
-- Click the button at the right moment to unlock the lock.
+- Press the **spacebar** at the right moment to unlock the lock.
 - Each successful unlock increases your score.
 - The game gets progressively harder with each level.
-
-## Contributing
-Feel free to submit issues or pull requests to improve the game!
-
-## License
-This project is licensed under the MIT License.
