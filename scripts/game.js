@@ -140,27 +140,37 @@ function resetGame() {
     drawLock();
 }
 
-// Wire up the Start Game button
-document.getElementById('start-button').addEventListener('click', startGame);
+let debounceTimeout = null; // Timeout for debouncing
 
-// Listen for spacebar keydown to start or "pop" the lock
-document.addEventListener('keydown', function(event) {
-    if (event.code === 'Space') {
-        if (gameState === "idle") {
-            startGame();
-        } else if (gameState === "active") {
-            checkLock();
-        }
-    }
-});
+function acceptTap() {
+    // Prevent rapid taps or key presses
+    if (debounceTimeout) return;
 
-// Listen for touch events to start or "pop" the lock on mobile devices
-canvas.addEventListener('touchstart', function(event) {
     if (gameState === "idle") {
         startGame();
     } else if (gameState === "active") {
         checkLock();
     }
+
+    // Set debounce timeout
+    debounceTimeout = setTimeout(() => {
+        debounceTimeout = null; // Clear debounce after 300ms
+    }, 300); // Adjust debounce time as needed
+}
+
+// Wire up the Start Game button
+document.getElementById('start-button').addEventListener('click', acceptTap);
+
+// Listen for spacebar keyup to start or "pop" the lock
+document.addEventListener('keyup', function(event) {
+    if (event.code === 'Space') {
+        acceptTap();
+    }
+});
+
+// Listen for touch events to start or "pop" the lock on mobile devices
+canvas.addEventListener('touchstart', function(event) {
+    acceptTap();
     event.preventDefault();
 }, { passive: false });
 
