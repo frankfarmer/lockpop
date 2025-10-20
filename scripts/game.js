@@ -1,5 +1,4 @@
 // This file contains the main game logic for the "Pop the Lock" arcade game.
-// It handles user interactions, game mechanics, and the overall flow of the game.
 
 let gameState = "idle"; // "idle", "active", "over", "victory"
 let score = 50; // Start at 50
@@ -84,11 +83,17 @@ function drawCircularText(text, x, y, radius, startAngle) {
     ctx.restore();
 }
 
-// Animate the marker
 function animateMarker() {
     if (gameState !== "active") return;
+
+    // Dynamically adjust marker speed based on score
+    const maxSpeed = 2 * Math.PI / 3; // 3 seconds per rotation
+    const minSpeed = 2 * Math.PI / 10; // 10 seconds per rotation
+    markerSpeed = minSpeed + ((maxSpeed - minSpeed) * (50 - score) / 50);
+
     markerAngle += markerSpeed;
     if (markerAngle > 2 * Math.PI) markerAngle -= 2 * Math.PI;
+
     drawLock();
     requestAnimationFrame(animateMarker);
 }
@@ -109,6 +114,7 @@ function checkLock() {
     const diff = Math.abs(markerAngle - targetAngle);
     if (diff < 0.2 || Math.abs(diff - 2 * Math.PI) < 0.2) { // Allow some margin
         score--;
+        markerSpeed = -markerSpeed; // Reverse direction on scoring
         if (score === 0) {
             gameState = "victory";
             drawLock();
