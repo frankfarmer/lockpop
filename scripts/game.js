@@ -83,6 +83,8 @@ function drawCircularText(text, x, y, radius, startAngle) {
     ctx.restore();
 }
 
+let markerDirection = 1; // 1 for clockwise, -1 for counterclockwise
+
 function animateMarker() {
     if (gameState !== "active") return;
 
@@ -94,8 +96,8 @@ function animateMarker() {
     // Calculate base speed per frame
     baseSpeed = (minSpeed + ((maxSpeed - minSpeed) * (50 - score) / 50)) / fps;
 
-    // Apply base speed to markerSpeed while preserving direction
-    markerSpeed = Math.sign(markerSpeed) * baseSpeed;
+    // Apply direction to markerSpeed
+    markerSpeed = markerDirection * baseSpeed;
 
     markerAngle += markerSpeed;
     if (markerAngle > 2 * Math.PI) markerAngle -= 2 * Math.PI;
@@ -104,23 +106,13 @@ function animateMarker() {
     requestAnimationFrame(animateMarker);
 }
 
-// Update target position when starting game
-function startGame() {
-    gameState = "active";
-    score = 50;
-    targetAngle = Math.random() * 2 * Math.PI;
-    markerAngle = 0;
-    drawLock();
-    animateMarker();
-}
-
 // Check if marker is close to target when spacebar is pressed
 function checkLock() {
     if (gameState !== "active") return;
     const diff = Math.abs(markerAngle - targetAngle);
     if (diff < 0.2 || Math.abs(diff - 2 * Math.PI) < 0.2) { // Allow some margin
         score--;
-        markerSpeed = -markerSpeed; // Reverse direction on scoring
+        markerDirection = -markerDirection; // Reverse direction on scoring
         if (score === 0) {
             gameState = "victory";
             drawLock();
@@ -130,6 +122,15 @@ function checkLock() {
     } else {
         resetGame();
     }
+}
+// Update target position when starting game
+function startGame() {
+    gameState = "active";
+    score = 50;
+    targetAngle = Math.random() * 2 * Math.PI;
+    markerAngle = 0;
+    drawLock();
+    animateMarker();
 }
 
 function resetGame() {
