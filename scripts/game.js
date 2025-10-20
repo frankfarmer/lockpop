@@ -9,8 +9,8 @@ const ctx = canvas.getContext('2d');
 const centerX = canvas.width / 2;
 const centerY = canvas.height / 2;
 
-// Tune this value so the marker follows the blue segment path
-const markerRadius = 155; // Try values between 145 and 165 for best fit
+// Tune this value so the marker follows the center of the dark blue ring
+const markerRadius = 110; // Try values between 100 and 120 for best fit
 
 let markerAngle = 0;
 let markerSpeed = 0.05; // Radians per frame
@@ -39,7 +39,7 @@ function drawLock() {
     const markerX = centerX + markerRadius * Math.cos(markerAngle);
     const markerY = centerY + markerRadius * Math.sin(markerAngle);
     ctx.beginPath();
-    ctx.arc(markerX, markerY, 12, 0, 2 * Math.PI);
+    ctx.arc(markerX, markerY, 8, 0, 2 * Math.PI); // Instead of 12
     ctx.fillStyle = '#3498db';
     ctx.fill();
 }
