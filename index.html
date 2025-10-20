@@ -16,6 +16,11 @@
 
         <div id="score">Score: 0</div>
     </div>
-    <script type="module" src="scripts/game.js"></script>
+    <script type="module">
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = 'scripts/game.js?v=' + Date.now();
+        document.body.appendChild(script);
+    </script>
 </body>
 </html>
