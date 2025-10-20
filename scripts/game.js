@@ -1,7 +1,7 @@
 // This file contains the main game logic for the "Pop the Lock" arcade game.
 // It handles user interactions, game mechanics, and the overall flow of the game.
 
-let isGameActive = false;
+let gameState = "idle"; // "idle", "active", "over", "victory"
 let score = 50; // Start at 50
 
 const canvas = document.getElementById('lock-canvas');
@@ -10,7 +10,7 @@ const centerX = canvas.width / 2;
 const centerY = canvas.height / 2;
 
 // Tune this value so the marker follows the center of the dark blue ring
-const markerRadius = 85; // Try values between 100 and 120 for best fit
+const markerRadius = 85; // Adjust this value to fit the dark blue ring
 
 let markerAngle = 0;
 let markerSpeed = 0.05; // Radians per frame
@@ -50,13 +50,13 @@ function drawLock() {
     ctx.textBaseline = "middle";
     ctx.fillText(score, centerX, centerY);
 
-    // Draw GAME OVER text if not active and score > 0
-    if (!isGameActive && score > 0 && score !== 50) {
+    // Draw GAME OVER text if the game ended due to a loss
+    if (gameState === "over") {
         drawCircularText("GAME OVER", centerX, centerY, 100, -Math.PI / 2);
     }
 
     // Draw VICTORY text if score reaches 0
-    if (score === 0) {
+    if (gameState === "victory") {
         drawCircularText("VICTORY!", centerX, centerY, 100, -Math.PI / 2);
     }
 }
@@ -86,7 +86,7 @@ function drawCircularText(text, x, y, radius, startAngle) {
 
 // Animate the marker
 function animateMarker() {
-    if (!isGameActive) return;
+    if (gameState !== "active") return;
     markerAngle += markerSpeed;
     if (markerAngle > 2 * Math.PI) markerAngle -= 2 * Math.PI;
     drawLock();
@@ -95,7 +95,7 @@ function animateMarker() {
 
 // Update target position when starting game
 function startGame() {
-    isGameActive = true;
+    gameState = "active";
     score = 50;
     targetAngle = Math.random() * 2 * Math.PI;
     markerAngle = 0;
@@ -105,12 +105,12 @@ function startGame() {
 
 // Check if marker is close to target when spacebar is pressed
 function checkLock() {
-    if (!isGameActive) return;
+    if (gameState !== "active") return;
     const diff = Math.abs(markerAngle - targetAngle);
     if (diff < 0.2 || Math.abs(diff - 2 * Math.PI) < 0.2) { // Allow some margin
         score--;
         if (score === 0) {
-            isGameActive = false;
+            gameState = "victory";
             drawLock();
             return;
         }
@@ -121,10 +121,9 @@ function checkLock() {
 }
 
 function resetGame() {
-    isGameActive = false;
+    gameState = "over"; // Mark the game as over
     drawLock();
 }
-
 
 // Wire up the Start Game button
 document.getElementById('start-button').addEventListener('click', startGame);
@@ -132,9 +131,9 @@ document.getElementById('start-button').addEventListener('click', startGame);
 // Listen for spacebar keydown to start or "pop" the lock
 document.addEventListener('keydown', function(event) {
     if (event.code === 'Space') {
-        if (!isGameActive) {
+        if (gameState === "idle") {
             startGame();
-        } else {
+        } else if (gameState === "active") {
             checkLock();
         }
     }
@@ -142,9 +141,9 @@ document.addEventListener('keydown', function(event) {
 
 // Listen for touch events to start or "pop" the lock on mobile devices
 canvas.addEventListener('touchstart', function(event) {
-    if (!isGameActive) {
+    if (gameState === "idle") {
         startGame();
-    } else {
+    } else if (gameState === "active") {
         checkLock();
     }
     event.preventDefault();
