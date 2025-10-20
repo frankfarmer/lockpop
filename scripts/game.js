@@ -152,10 +152,10 @@ function acceptTap() {
     // Update the last input time
     lastInputTime = currentTime;
 
-    if (gameState === "idle") {
-        startGame();
-    } else if (gameState === "active") {
+    if (gameState === "active") {
         checkLock();
+    } else {
+        startGame();
     }
 }
 
