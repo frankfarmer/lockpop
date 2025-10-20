@@ -140,22 +140,23 @@ function resetGame() {
     drawLock();
 }
 
-let debounceTimeout = null; // Timeout for debouncing
+let lastInputTime = 0; // Track the last timestamp of input
+const debounceInterval = 300; // Minimum time (in ms) between inputs
 
 function acceptTap() {
-    // Prevent rapid taps or key presses
-    if (debounceTimeout) return;
+    const currentTime = Date.now(); // Get the current timestamp
+
+    // Check if enough time has passed since the last input
+    if (currentTime - lastInputTime < debounceInterval) return;
+
+    // Update the last input time
+    lastInputTime = currentTime;
 
     if (gameState === "idle") {
         startGame();
     } else if (gameState === "active") {
         checkLock();
     }
-
-    // Set debounce timeout
-    debounceTimeout = setTimeout(() => {
-        debounceTimeout = null; // Clear debounce after 300ms
-    }, 300); // Adjust debounce time as needed
 }
 
 // Wire up the Start Game button
