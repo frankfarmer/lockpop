@@ -94,10 +94,12 @@ function animateMarker() {
     const fps = 60; // Frames per second
 
     // Calculate base speed per frame
-    baseSpeed = (minSpeed + ((maxSpeed - minSpeed) * (50 - score) / 50)) / fps;
+    const baseSpeed = (minSpeed + ((maxSpeed - minSpeed) * (50 - score) / 50)) / fps;
 
     // Apply direction to markerSpeed
     markerSpeed = markerDirection * baseSpeed;
+
+    console.log(`markerSpeed: ${markerSpeed}, markerAngle: ${markerAngle}`);
 
     markerAngle += markerSpeed;
     if (markerAngle > 2 * Math.PI) markerAngle -= 2 * Math.PI;
