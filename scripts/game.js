@@ -10,7 +10,7 @@ const centerX = canvas.width / 2;
 const centerY = canvas.height / 2;
 
 // Tune this value so the marker follows the center of the dark blue ring
-const markerRadius = 110; // Try values between 100 and 120 for best fit
+const markerRadius = 80; // Try values between 100 and 120 for best fit
 
 let markerAngle = 0;
 let markerSpeed = 0.05; // Radians per frame
@@ -39,9 +39,16 @@ function drawLock() {
     const markerX = centerX + markerRadius * Math.cos(markerAngle);
     const markerY = centerY + markerRadius * Math.sin(markerAngle);
     ctx.beginPath();
-    ctx.arc(markerX, markerY, 8, 0, 2 * Math.PI); // Instead of 12
+    ctx.arc(markerX, markerY, 8, 0, 2 * Math.PI);
     ctx.fillStyle = '#3498db';
     ctx.fill();
+
+    // Draw score centered in the dark green circle
+    ctx.font = "bold 32px Arial";
+    ctx.fillStyle = "#fff";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(score, centerX, centerY);
 }
 
 // Animate the marker
@@ -91,13 +98,26 @@ function updateGameUI() {
 // Wire up the Start Game button
 document.getElementById('start-button').addEventListener('click', startGame);
 
-// Listen for spacebar keydown to "pop" the lock
+// Listen for spacebar keydown to start or "pop" the lock
 document.addEventListener('keydown', function(event) {
-    if (isGameActive && event.code === 'Space') {
-        checkLock();
+    if (event.code === 'Space') {
+        if (!isGameActive) {
+            startGame();
+        } else {
+            checkLock();
+        }
     }
 });
 
+// Listen for touch events to start or "pop" the lock on mobile devices
+canvas.addEventListener('touchstart', function(event) {
+    if (!isGameActive) {
+        startGame();
+    } else {
+        checkLock();
+    }
+    event.preventDefault();
+}, { passive: false });
 
 // Exporting functions for use in other modules
 export { startGame, checkLock, resetGame };
